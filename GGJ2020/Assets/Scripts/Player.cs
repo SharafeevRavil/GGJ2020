@@ -11,7 +11,7 @@ public enum PlayerStatus
 {
     Walk,
     Grab,
-    MovingBlock
+    BlockMove
 }
 
 public class Player : MonoBehaviour
@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public List<MovableBlock> movableBlocks = new List<MovableBlock>();
 
     public MovableBlock nearestMovableBlock;
+
+    public MovableBlock grabbedBlock;
 
     public void CheckMovableBlock(MovableBlock block)
     {
@@ -61,5 +63,49 @@ public class Player : MonoBehaviour
 
         nearestMovableBlock = block;
         Debug.Log($"the nearest movable block is {block}");
+    }
+
+    public void Update()
+    {
+        switch (playerStatus)
+        {
+            case PlayerStatus.Walk:
+                if (nearestMovableBlock)
+                {
+                    if (Input.GetKeyDown(KeyCode.G))
+                    {
+                        //todo grab
+                        grabbedBlock = nearestMovableBlock;
+                        playerStatus = PlayerStatus.Grab;
+                    }
+                }
+                break;
+            case PlayerStatus.Grab:
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    //todo release grab
+                    grabbedBlock = null;
+                    playerStatus = PlayerStatus.Walk;
+                }
+                else
+                {
+                    grabbedBlock.UpdateGrabbed(this);
+                }
+                break;
+            case PlayerStatus.BlockMove:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public void PlayerMoveBlockForward()
+    {
+        //anim
+    }
+
+    public void PlayerMoveBlockBack()
+    {
+        //anim
     }
 }

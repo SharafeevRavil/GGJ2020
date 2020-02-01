@@ -7,14 +7,16 @@ namespace DefaultNamespace
 {
     public class MovableBlock : Block
     {
-        public virtual void Move(Vector3Int direction){
-            
-        }
-        
-
-        public virtual void BeforeMove(Vector3 move)
+        public void UpdateGrabbed(Player player)
         {
-        
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                player.PlayerMoveBlockForward();
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                player.PlayerMoveBlockBack();
+            }
         }
 
         private void OnTriggerStay(Collider other)
