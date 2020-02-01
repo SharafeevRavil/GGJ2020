@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : MonoBehaviour {
-  
-    public float turnSpeed = 4.0f;
+public class Orbit : MonoBehaviour
+{
+    public float horizontalTurnSpeed = 4.0f;
+    public float verticalTurnSpeed = 3.0f;
     public Transform player;
-  
+    public Vector3 deltaOffset = new Vector3(0, 8f, 7f);
     private Vector3 offset;
-  
-    void Start ()
+
+    void Start()
     {
         var position = player.position;
-        offset = new Vector3(position.x, position.y + 8.0f, position.z + 7.0f);
+        offset = position + deltaOffset;
     }
-  
+
     void LateUpdate()
     {
-        offset = Quaternion.AngleAxis (Input.GetAxis("Mouse X") * turnSpeed, Vector3.up) * offset;
+        offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * horizontalTurnSpeed, Vector3.up) * offset;
+        offset = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * verticalTurnSpeed, Vector3.right) * offset;
         var position = player.position;
-        transform.position = position + offset; 
+        transform.position = position + offset;
         transform.LookAt(position);
     }
 }

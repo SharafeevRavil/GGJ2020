@@ -31,15 +31,17 @@ public class PlayerMotor : MonoBehaviour
 
     private void Update()
     {
+        //check is grounded
         _isGrounded =
             Physics.CheckSphere(groundChecker.position, groundDistance, ground, QueryTriggerInteraction.Ignore);
         if (_isGrounded && _velocity.y < 0)
             _velocity.y = 0f;
-
+        //horizontal move
         float speed = (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed);
 
         Vector3 move = RotateWithView(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
-        _controller.Move(Time.deltaTime * speed * move);
+        move *= Time.deltaTime * speed;
+        _controller.Move(move);
 
         if (move != Vector3.zero)
         {
@@ -47,17 +49,19 @@ public class PlayerMotor : MonoBehaviour
         }
 
         _animator.SetFloat("Speed", move.magnitude);
-
-
+        
+        //
+        
+        //Jump
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
             _velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
-
+        //Gravity
         _velocity.y += gravity * Time.deltaTime;
-
+        //Some magic
         _velocity.x /= 1 + drag.x * Time.deltaTime;
         _velocity.y /= 1 + drag.y * Time.deltaTime;
         _velocity.z /= 1 + drag.z * Time.deltaTime;
-
+        //submit vertical
         _controller.Move(_velocity * Time.deltaTime);
     }
 
