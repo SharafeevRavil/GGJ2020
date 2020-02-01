@@ -14,7 +14,7 @@ public enum PlayerStatus
     BlockMove
 }
 
-public class Player : MonoBehaviour
+public class PlayerBlocks : MonoBehaviour
 {
     public BlockLevel currentLevel;
 

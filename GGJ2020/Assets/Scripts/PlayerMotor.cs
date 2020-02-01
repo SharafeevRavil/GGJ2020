@@ -23,6 +23,16 @@ public class PlayerMotor : MonoBehaviour
     private bool _isGrounded;
     public Transform groundChecker;
 
+
+    public PlayerBlocks playerBlocks;
+
+    private bool _moveBlocked = false;
+
+    public void UnblockMove()
+    {
+        _moveBlocked = false;
+    }
+
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -37,23 +47,31 @@ public class PlayerMotor : MonoBehaviour
         if (_isGrounded && _velocity.y < 0)
             _velocity.y = 0f;
         //horizontal move
-        float speed = (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed);
-
-        Vector3 move = RotateWithView(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
-        move *= Time.deltaTime * speed;
-        _controller.Move(move);
-
-        if (move != Vector3.zero)
+        if (!_moveBlocked)
         {
-            transform.forward = move;
+            float speed = (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed);
+
+            Vector3 move = RotateWithView(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
+            move *= Time.deltaTime * speed;
+            _controller.Move(move);
+
+            if (move != Vector3.zero)
+            {
+                transform.forward = move;
+            }
+
+            _animator.SetFloat("Speed", move.magnitude);
         }
 
-        _animator.SetFloat("Speed", move.magnitude);
-        
-        //
-        
+        //Push movable
+        if (!_moveBlocked && Input.GetKeyDown(KeyCode.F) && playerBlocks.nearestMovableBlock)
+        {
+            _animator.SetTrigger("Kicking");
+            _moveBlocked = true;
+        }
+
         //Jump
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        if (!_moveBlocked && Input.GetKeyDown(KeyCode.Space) && _isGrounded)
             _velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         //Gravity
         _velocity.y += gravity * Time.deltaTime;
