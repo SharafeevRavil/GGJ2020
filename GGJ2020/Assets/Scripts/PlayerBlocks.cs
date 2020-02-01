@@ -67,18 +67,13 @@ public class PlayerBlocks : MonoBehaviour
 
     public void PushNearestBlock()
     {
-        Vector3Int blockPos = nearestMovableBlock.position;
-        Vector3 diff = blockPos - playerCenter.position;
-        Vector3Int direction;
-        if (Math.Abs(diff.x) > Math.Abs(diff.z))
-        {
-            direction = diff.x > 0 ? Vector3Int.right : Vector3Int.left;
-        }
-        else
-        {
-            direction = diff.z > 0 ? new Vector3Int(0, 0, 1) : new Vector3Int(0, 0, -1);
-        }
+        nearestMovableBlock.Push(nearestMovableBlock.position.GetDirection(playerCenter.position));
+    }
 
-        nearestMovableBlock.Push(direction);
+    public bool CanMoveNearest()
+    {
+        return nearestMovableBlock && currentLevel.CheckIsEmpty(nearestMovableBlock.position +
+                                                                nearestMovableBlock.position.GetDirection(playerCenter
+                                                                    .position));
     }
 }

@@ -80,7 +80,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         //Push movable
-        if (!_moveBlocked && _isGrounded && Input.GetKeyDown(KeyCode.F) && playerBlocks.nearestMovableBlock)
+        if (!_moveBlocked && _isGrounded && Input.GetKeyDown(KeyCode.F) && playerBlocks.CanMoveNearest())
         {
             _animator.SetTrigger("Kicking");
             _moveBlocked = true;

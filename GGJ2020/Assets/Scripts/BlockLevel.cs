@@ -33,7 +33,7 @@ public class BlockLevel : MonoBehaviour
             //читаем z раз строчки (по х) в слайсе
             for (int z = 0; z < LevelSize.z; z++)
             {
-                string[] line = lines[LevelSize.z * y + z];
+                string[] line = lines[(LevelSize.z + 1) * y + z];
                 for (int x = 0; x < LevelSize.x; x++)
                 {
                     int id = int.Parse(line[x]);
@@ -63,9 +63,71 @@ public class BlockLevel : MonoBehaviour
         block.position = to;
         _blocks[from.x, from.y, from.z] = null;
         _blocks[to.x, to.y, to.z] = block;
+
+        if (block.position.y > 0 && !_blocks[block.position.x, block.position.y - 1, block.position.z])
+        {
+            ((MovableBlock)block).Push(Vector3Int.down);
+        }
+        else
+        {
+            CheckElectric();
+        }
     }
 
-    private Block[,,] _blocks;
+    public bool CheckIsEmpty(Vector3Int position)
+    {
+        return position.x >= 0 && position.x < LevelSize.x &&
+               position.y >= 0 && position.y < LevelSize.y &&
+               position.z >= 0 && position.z < LevelSize.z &&
+               !_blocks[position.x, position.y, position.z];
+    }
+
+    public Block[,,] _blocks;
+
+
+    public void CheckElectric()
+    {
+        bool[,,] visited = new bool[LevelSize.x, LevelSize.y, LevelSize.z];
+        ElectricGeneratorBlock generatorBlock = null;
+        foreach (var block in _blocks)
+        {
+            if (block is ElectricGeneratorBlock)
+            {
+                generatorBlock = (ElectricGeneratorBlock) block;
+            }
+        }
+        Recursion(visited, generatorBlock.position);
+    }
+
+    public void ReceiverHasEnabled()
+    {
+        Debug.Log("YOU WIN");
+        testWin.SetActive(true);
+        
+    }
+
+    public GameObject testWin;
+    
+    public void Recursion(bool[,,] visited, Vector3Int position)
+    {
+        if (position.x < 0 || position.x >= LevelSize.x ||
+            position.y < 0 || position.y >= LevelSize.y ||
+            position.z < 0 || position.z >= LevelSize.z ||
+            visited[position.x, position.y, position.z] ||
+            !(_blocks[position.x, position.y, position.z] is IElectricBlock) ||
+            !((IElectricBlock) _blocks[position.x, position.y, position.z]).IsActivated)
+        {
+            return;
+        }
+
+        visited[position.x, position.y, position.z] = true;
+        Recursion(visited, position + new Vector3Int(0, 0, -1));
+        Recursion(visited, position + new Vector3Int(0, 0, 1));
+        Recursion(visited, position + new Vector3Int(0, -1, 0));
+        Recursion(visited, position + new Vector3Int(0, 1, 0));
+        Recursion(visited, position + new Vector3Int(-1, 0, 0));
+        Recursion(visited, position + new Vector3Int(1, 0, 0));
+    }
 }
 
 [Serializable]

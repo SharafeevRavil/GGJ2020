@@ -7,7 +7,7 @@ namespace DefaultNamespace
 {
     public class MovableBlock : Block
     {
-        public float pushSpeed;
+        public float pushSpeed = 2f;
 
         private void OnTriggerStay(Collider other)
         {
