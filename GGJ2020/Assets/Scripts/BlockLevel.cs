@@ -44,6 +44,7 @@ public class BlockLevel : MonoBehaviour
                             transform).GetComponent<Block>();
                         _blocks[x, y, z] = curBlock;
                         curBlock.position = new Vector3Int(x, y, z);
+                        curBlock.blockLevel = this;
                         Debug.Log($"Block on {curBlock.position} has created. His id is {id}");
                     }
                     else
@@ -54,6 +55,14 @@ public class BlockLevel : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void MoveBlock(Vector3Int from, Vector3Int to)
+    {
+        Block block = _blocks[from.x, from.y, from.z];
+        block.position = to;
+        _blocks[from.x, from.y, from.z] = null;
+        _blocks[to.x, to.y, to.z] = block;
     }
 
     private Block[,,] _blocks;

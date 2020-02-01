@@ -108,6 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
+  blockLevel: {fileID: 0}
+  pushSpeed: 2
 --- !u!65 &2988430683176146186
 BoxCollider:
   m_ObjectHideFlags: 0

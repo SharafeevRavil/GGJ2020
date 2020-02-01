@@ -19,7 +19,14 @@ public class Orbit : MonoBehaviour
     void LateUpdate()
     {
         offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * horizontalTurnSpeed, Vector3.up) * offset;
-        offset = Quaternion.AngleAxis(-1 * Input.GetAxis("Mouse Y") * verticalTurnSpeed, Vector3.left) * offset;
+        float vertAngle = -1 * Input.GetAxis("Mouse Y") * verticalTurnSpeed;
+        Quaternion vertRot = Quaternion.AngleAxis(vertAngle, transform.right);
+        if (!(transform.eulerAngles.x < 280 && transform.eulerAngles.x >= 270 && vertAngle < 0) &&
+            !(transform.eulerAngles.x > 80 && transform.eulerAngles.x <= 90 && vertAngle > 0))
+        {
+            offset = vertRot * offset;
+        }
+
         var position = player.position;
         transform.position = position + offset;
         transform.LookAt(position);

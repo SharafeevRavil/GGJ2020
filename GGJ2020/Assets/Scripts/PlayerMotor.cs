@@ -33,6 +33,11 @@ public class PlayerMotor : MonoBehaviour
         _moveBlocked = false;
     }
 
+    public void StartPush()
+    {
+        playerBlocks.PushNearestBlock();
+    }
+
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -46,14 +51,25 @@ public class PlayerMotor : MonoBehaviour
             Physics.CheckSphere(groundChecker.position, groundDistance, ground, QueryTriggerInteraction.Ignore);
         if (_isGrounded && _velocity.y < 0)
             _velocity.y = 0f;
+        //jump end
+        if (_isGrounded)
+        {
+            _animator.SetBool("Jumping", false);
+        }
+
         //horizontal move
         if (!_moveBlocked)
         {
             float speed = (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed);
 
-            Vector3 move = RotateWithView(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
-            move *= Time.deltaTime * speed;
-            _controller.Move(move);
+            Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            if (moveDirection.magnitude > 1)
+            {
+                moveDirection = moveDirection.normalized;
+            }
+
+            Vector3 move = RotateWithView(moveDirection) * speed;
+            _controller.Move(Time.deltaTime * move);
 
             if (move != Vector3.zero)
             {
@@ -64,15 +80,19 @@ public class PlayerMotor : MonoBehaviour
         }
 
         //Push movable
-        if (!_moveBlocked && Input.GetKeyDown(KeyCode.F) && playerBlocks.nearestMovableBlock)
+        if (!_moveBlocked && _isGrounded && Input.GetKeyDown(KeyCode.F) && playerBlocks.nearestMovableBlock)
         {
             _animator.SetTrigger("Kicking");
             _moveBlocked = true;
         }
 
         //Jump
-        if (!_moveBlocked && Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        if (!_moveBlocked && _isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            _animator.SetBool("Jumping", true);
             _velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
         //Gravity
         _velocity.y += gravity * Time.deltaTime;
         //Some magic

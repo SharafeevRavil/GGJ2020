@@ -16,9 +16,9 @@ public enum PlayerStatus
 
 public class PlayerBlocks : MonoBehaviour
 {
-    public BlockLevel currentLevel;
+    public Transform playerCenter;
 
-    public PlayerStatus playerStatus;
+    public BlockLevel currentLevel;
 
     public List<MovableBlock> movableBlocks = new List<MovableBlock>();
 
@@ -28,7 +28,7 @@ public class PlayerBlocks : MonoBehaviour
 
     public void CheckMovableBlock(MovableBlock block)
     {
-        if (block.position.y == Mathf.RoundToInt(transform.position.y))
+        if (block.position.y == Mathf.RoundToInt(playerCenter.position.y))
         {
             if (movableBlocks.Contains(block))
             {
@@ -65,47 +65,20 @@ public class PlayerBlocks : MonoBehaviour
         Debug.Log($"the nearest movable block is {block}");
     }
 
-    public void Update()
+    public void PushNearestBlock()
     {
-        switch (playerStatus)
+        Vector3Int blockPos = nearestMovableBlock.position;
+        Vector3 diff = blockPos - playerCenter.position;
+        Vector3Int direction;
+        if (Math.Abs(diff.x) > Math.Abs(diff.z))
         {
-            case PlayerStatus.Walk:
-                if (nearestMovableBlock)
-                {
-                    if (Input.GetKeyDown(KeyCode.G))
-                    {
-                        //todo grab
-                        grabbedBlock = nearestMovableBlock;
-                        playerStatus = PlayerStatus.Grab;
-                    }
-                }
-                break;
-            case PlayerStatus.Grab:
-                if (Input.GetKeyDown(KeyCode.G))
-                {
-                    //todo release grab
-                    grabbedBlock = null;
-                    playerStatus = PlayerStatus.Walk;
-                }
-                else
-                {
-                    grabbedBlock.UpdateGrabbed(this);
-                }
-                break;
-            case PlayerStatus.BlockMove:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            direction = diff.x > 0 ? Vector3Int.right : Vector3Int.left;
         }
-    }
+        else
+        {
+            direction = diff.z > 0 ? new Vector3Int(0, 0, 1) : new Vector3Int(0, 0, -1);
+        }
 
-    public void PlayerMoveBlockForward()
-    {
-        //anim
-    }
-
-    public void PlayerMoveBlockBack()
-    {
-        //anim
+        nearestMovableBlock.Push(direction);
     }
 }
