@@ -8,13 +8,22 @@ public class Orbit : MonoBehaviour
     public float verticalTurnSpeed = 3.0f;
     public Transform player;
     public Vector3 deltaOffset = new Vector3(0, 8f, 7f);
+
     private Vector3 offset;
+    private float offsetMaxLength;
+
+    public float minCameraDistance = 1f;
+    public float obstacleOffestDistance = 0.5f;
 
     void Start()
     {
         var position = player.position;
         offset = position + deltaOffset;
+        curPosition = offset;
+        offsetMaxLength = offset.magnitude;
     }
+
+    private Vector3 curPosition;
 
     void LateUpdate()
     {
@@ -27,8 +36,34 @@ public class Orbit : MonoBehaviour
             offset = vertRot * offset;
         }
 
-        var position = player.position;
-        transform.position = position + offset;
-        transform.LookAt(position);
+        var playerPos = player.position;
+        transform.position = playerPos + offset;
+
+        curPosition = playerPos + offset;
+        Vector3 pos = curPosition;
+
+        RaycastHit hit;
+
+        Debug.DrawRay(playerPos, offset, Color.red);
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(playerPos, offset, out hit,
+            offsetMaxLength, ~LayerMask.GetMask("Player")))
+        {
+            //какой-то предмет
+            pos = hit.point - offset.normalized * obstacleOffestDistance;
+            if ((pos - playerPos).magnitude < minCameraDistance)
+            {
+                pos = playerPos + offset.normalized * minCameraDistance;
+            }
+
+            Debug.DrawLine(playerPos, hit.point, Color.blue);
+        }
+
+        //Debug.DrawLine(playerPos, playerPos + offset.normalized * offsetMaxLength, Color.magenta);
+        
+        
+        transform.position = pos;
+
+        transform.LookAt(playerPos);
     }
 }
