@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Eyes : CatScene
+public class Inside : CatScene
 {
     public GameObject camera1;
     public GameObject camera2;
 
-    public SkinnedMeshRenderer renderer;
-    public Material mat1;
-    public Material mat2;
+
+    public Transform player;
+    public Transform target;
 
     public override void StartScene(GameController gameController, int nextLevelId)
     {
@@ -19,16 +19,19 @@ public class Eyes : CatScene
 
     private IEnumerator WaitForNextLevel()
     {
+        Vector3 pos = player.position;
         camera1.SetActive(false);
         camera2.SetActive(true);
         float time = 5f;
         float cur = 0f;
         yield return null;
+        player.gameObject.SetActive(true);
+        player.GetComponent<Animator>().SetFloat("Speed", 5f);
         while (true)
         {
             cur += Time.deltaTime;
-            //renderer.material.Lerp(mat1, mat2, cur / time);
-            renderer.material.SetFloat("_Blend", cur / time);
+
+            player.transform.position = Vector3.Lerp(pos, target.position, cur / time);
 
             if (cur > time)
             {
@@ -39,6 +42,7 @@ public class Eyes : CatScene
         }
 
         yield return null;
+        player.gameObject.SetActive(false);
         camera1.SetActive(true);
         camera2.SetActive(false);
         StartNextLevel();

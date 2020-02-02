@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
 
     public void Start()
     {
-        CreateLevel(0);
+        StartCatScene(0);
     }
 
     public void CreateLevel(int id)
@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour
         else
         {
             //GameEnd
+            StartCatScene(7);
         }
     }
 
