@@ -6,8 +6,9 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] public List<LevelConfiguration> levels;
-
     public GameObject levelPrefab;
+
+    [SerializeField] public List<CatScene> catScenes;
 
     public void Start()
     {
@@ -26,11 +27,25 @@ public class GameController : MonoBehaviour
     {
         if (id + 1 < levels.Count)
         {
-            CreateLevel(id + 1);
+            int catSceneId = levels[id].catSceneId;
+            if (catSceneId != -1)
+            {
+                //Load catscene
+                StartCatScene(catSceneId, id + 1);
+            }
+            else
+            {
+                CreateLevel(id + 1);
+            }
         }
         else
         {
             //GameEnd
         }
+    }
+
+    private void StartCatScene(int catSceneId, int nextLevelId)
+    {
+        catScenes[catSceneId].StartScene(nextLevelId);
     }
 }

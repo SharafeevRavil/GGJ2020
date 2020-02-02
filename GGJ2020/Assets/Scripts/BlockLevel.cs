@@ -12,6 +12,7 @@ public class LevelConfiguration
     [SerializeField] public Vector3Int levelSize;
     [SerializeField] public string levelConfigurationFile;
     [SerializeField] public Vector3 playerSpawn;
+    [SerializeField] public int catSceneId;
 }
 
 public class BlockLevel : MonoBehaviour
