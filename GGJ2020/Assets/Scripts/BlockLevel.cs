@@ -6,39 +6,44 @@ using System.Text.RegularExpressions;
 using DefaultNamespace;
 using UnityEngine;
 
+[Serializable]
+public class LevelConfiguration
+{
+    [SerializeField] public Vector3Int levelSize;
+    [SerializeField] public string levelConfigurationFile;
+    [SerializeField] public Vector3 playerSpawn;
+}
+
 public class BlockLevel : MonoBehaviour
 {
-    [SerializeField] public LevelConfiguration levelConfiguration;
-
     public Vector3Int LevelSize { get; private set; }
-    public Vector3 playerSpawn;
 
     public void ReceiverHasEnabled()
     {
         Debug.Log("YOU WIN");
-        testWin.SetActive(true);
+        //testWin.SetActive(true);
         //_player.SetActive(false);
         //WINNNNNNNNNN
+        _gameController.FinishLevel(_number);
         Destroy(gameObject);
     }
-    
-    public void Start()
-    {
-        InitLevel(0);
-    }
-    
+
     private int _number;
     private GameObject _player;
 
     public GameObject playerPrefab;
-    public void InitLevel(int number)
+
+    private GameController _gameController;
+
+    public void InitLevel(GameController gameController, LevelConfiguration levelConfiguration, int levelNumber)
     {
-        _number = number;
-        
-        _player = Instantiate(playerPrefab, playerSpawn, Quaternion.identity, transform);
+        _gameController = gameController;
+
+        _player = Instantiate(playerPrefab, levelConfiguration.playerSpawn, Quaternion.identity, transform);
         _player.GetComponent<PlayerBlocks>().currentLevel = this;
 
 
+        _number = levelNumber;
         LevelSize = levelConfiguration.levelSize;
         _blocks = new Block[LevelSize.x, LevelSize.y, LevelSize.z];
 
@@ -151,10 +156,6 @@ public class BlockLevel : MonoBehaviour
         }
     }
 
-    
-
-    public GameObject testWin;
-
     public void Recursion(bool[,,] visited, Vector3Int position)
     {
         if (position.x < 0 || position.x >= LevelSize.x ||
@@ -175,12 +176,4 @@ public class BlockLevel : MonoBehaviour
         Recursion(visited, position + new Vector3Int(-1, 0, 0));
         Recursion(visited, position + new Vector3Int(1, 0, 0));
     }
-}
-
-[Serializable]
-public class LevelConfiguration
-{
-    [SerializeField] public Vector3Int levelSize;
-
-    [SerializeField] public string levelConfigurationFile;
 }
