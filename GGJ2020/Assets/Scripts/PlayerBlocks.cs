@@ -65,17 +65,22 @@ public class PlayerBlocks : MonoBehaviour
         Debug.Log($"the nearest movable block is {block}");
     }
 
-    public void PushNearestBlock()
+    public void PushBlock(MovableBlock block)
     {
-        nearestMovableBlock.Push(nearestMovableBlock.position.GetDirection(playerCenter.position));
+        block.Push(block.position.GetDirection(playerCenter.position));
     }
 
-    public bool CanMoveNearest()
+    public MovableBlock CanMoveNearest()
     {
-        return nearestMovableBlock &&
+        if (nearestMovableBlock &&
             currentLevel.CheckIsEmpty(
                 nearestMovableBlock.position +
                 nearestMovableBlock.position.GetDirection(playerCenter.position)) &&
-            !currentLevel.CheckIsMovable(nearestMovableBlock.position + Vector3Int.up);
+            !currentLevel.CheckIsMovable(nearestMovableBlock.position + Vector3Int.up))
+        {
+            return nearestMovableBlock;
+        }
+
+        return null;
     }
 }

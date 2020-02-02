@@ -17,10 +17,13 @@ public class Orbit : MonoBehaviour
 
     void Start()
     {
-        var position = player.position;
-        offset = /*position +*/ deltaOffset;
+        offset = deltaOffset;
         curPosition = offset;
         offsetMaxLength = offset.magnitude;
+    }
+
+    void Init()
+    {
     }
 
     private Vector3 curPosition;
@@ -34,6 +37,17 @@ public class Orbit : MonoBehaviour
             !(transform.eulerAngles.x > 80 && transform.eulerAngles.x <= 90 && vertAngle > 0))
         {
             offset = vertRot * offset;
+        }
+
+        if (!player)
+        {
+            PlayerMotor motor = FindObjectOfType<PlayerMotor>();
+            if (!motor)
+            {
+                return;
+            }
+
+            player = motor.transform;
         }
 
         var playerPos = player.position;
@@ -60,8 +74,8 @@ public class Orbit : MonoBehaviour
         }
 
         //Debug.DrawLine(playerPos, playerPos + offset.normalized * offsetMaxLength, Color.magenta);
-        
-        
+
+
         transform.position = pos;
 
         transform.LookAt(playerPos);

@@ -13,15 +13,30 @@ public class BlockLevel : MonoBehaviour
     public Vector3Int LevelSize { get; private set; }
     public Vector3 playerSpawn;
 
+    public void ReceiverHasEnabled()
+    {
+        Debug.Log("YOU WIN");
+        testWin.SetActive(true);
+        //_player.SetActive(false);
+        //WINNNNNNNNNN
+        Destroy(gameObject);
+    }
+    
     public void Start()
     {
-        InitLevel();
+        InitLevel(0);
     }
+    
+    private int _number;
+    private GameObject _player;
 
-    public void InitLevel()
+    public GameObject playerPrefab;
+    public void InitLevel(int number)
     {
-        GameObject player = FindObjectOfType<PlayerMotor>().gameObject;
-        player.transform.position = playerSpawn;
+        _number = number;
+        
+        _player = Instantiate(playerPrefab, playerSpawn, Quaternion.identity, transform);
+        _player.GetComponent<PlayerBlocks>().currentLevel = this;
 
 
         LevelSize = levelConfiguration.levelSize;
@@ -136,11 +151,7 @@ public class BlockLevel : MonoBehaviour
         }
     }
 
-    public void ReceiverHasEnabled()
-    {
-        Debug.Log("YOU WIN");
-        testWin.SetActive(true);
-    }
+    
 
     public GameObject testWin;
 

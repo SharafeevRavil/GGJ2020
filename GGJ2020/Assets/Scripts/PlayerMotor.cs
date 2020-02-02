@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
@@ -35,13 +36,16 @@ public class PlayerMotor : MonoBehaviour
 
     public void StartPush()
     {
-        playerBlocks.PushNearestBlock();
+        playerBlocks.PushBlock(_block);
     }
+
+    private MovableBlock _block;
 
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        cameraTransform = FindObjectOfType<Orbit>().transform;
     }
 
     private void Update()
@@ -82,8 +86,15 @@ public class PlayerMotor : MonoBehaviour
         //Push movable
         if (!_moveBlocked && _isGrounded && Input.GetKeyDown(KeyCode.F) && playerBlocks.CanMoveNearest())
         {
-            _animator.SetTrigger("Kicking");
-            _moveBlocked = true;
+            MovableBlock block = playerBlocks.CanMoveNearest();
+            if (block)
+            {
+                _block = block;
+                Vector3 dir = block.transform.position - transform.position;
+                transform.forward = new Vector3(dir.x, 0, dir.z);
+                _animator.SetTrigger("Kicking");
+                _moveBlocked = true;
+            }
         }
 
         //Jump
