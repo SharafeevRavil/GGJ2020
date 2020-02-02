@@ -17,11 +17,14 @@ public class GameController : MonoBehaviour
 
     public void CreateLevel(int id)
     {
+        controls.SetActive(true);
         GameObject go = Instantiate(levelPrefab);
         BlockLevel level = go.GetComponent<BlockLevel>();
 
         level.InitLevel(this, levels[id], id);
     }
+
+    public GameObject controls;
 
     public void FinishLevel(int id, GameObject goToDestroy)
     {
@@ -45,6 +48,7 @@ public class GameController : MonoBehaviour
 
     private void StartCatScene(int nextLevelId)
     {
+        controls.SetActive(false);
         catScenes[nextLevelId].StartScene(this, nextLevelId);
         //after this catScene should invoke CreateLevel(id + 1);
     }

@@ -61,6 +61,12 @@ public class UpAnim : CatScene
         }
 
         yield return null;
+        thanksForPlaying1.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        thanksForPlaying2.SetActive(true);
         //some shit after
     }
+
+    public GameObject thanksForPlaying1;
+    public GameObject thanksForPlaying2;
 }
