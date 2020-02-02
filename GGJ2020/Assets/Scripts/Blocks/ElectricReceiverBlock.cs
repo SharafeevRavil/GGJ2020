@@ -15,5 +15,13 @@ public class ElectricReceiverBlock : Block, IElectricBlock
     
     public void EnsureDisabled(bool visited)
     {
+        if (!visited)
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(false);
+        }
+        else
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(true);
+        }
     }
 }

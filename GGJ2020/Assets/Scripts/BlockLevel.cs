@@ -24,8 +24,8 @@ public class BlockLevel : MonoBehaviour
         //testWin.SetActive(true);
         //_player.SetActive(false);
         //WINNNNNNNNNN
-        _gameController.FinishLevel(_number);
-        Destroy(gameObject);
+        isFinished = true;
+        _gameController.FinishLevel(_number, gameObject);
     }
 
     private int _number;
@@ -34,6 +34,16 @@ public class BlockLevel : MonoBehaviour
     public GameObject playerPrefab;
 
     private GameController _gameController;
+
+    private bool isFinished = false;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R) && !isFinished)
+        {
+            _gameController.CreateLevel(_number);
+            Destroy(gameObject);
+        }
+    }
 
     public void InitLevel(GameController gameController, LevelConfiguration levelConfiguration, int levelNumber)
     {

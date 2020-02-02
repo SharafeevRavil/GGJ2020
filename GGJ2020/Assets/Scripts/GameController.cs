@@ -23,16 +23,23 @@ public class GameController : MonoBehaviour
         level.InitLevel(this, levels[id], id);
     }
 
-    public void FinishLevel(int id)
+    public void FinishLevel(int id, GameObject goToDestroy)
     {
         if (id + 1 < levels.Count)
         {
-            StartCatScene(id + 1);
+            StartCoroutine(WaitLevelEnd(id, goToDestroy));
         }
         else
         {
             //GameEnd
         }
+    }
+
+    private IEnumerator WaitLevelEnd(int id, GameObject goToDestroy)
+    {
+        yield return new WaitForSeconds(3f);
+        StartCatScene(id + 1);
+        Destroy(goToDestroy);
     }
 
     private void StartCatScene(int nextLevelId)
