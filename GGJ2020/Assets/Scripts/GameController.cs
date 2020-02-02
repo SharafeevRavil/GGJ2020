@@ -27,16 +27,7 @@ public class GameController : MonoBehaviour
     {
         if (id + 1 < levels.Count)
         {
-            int catSceneId = levels[id].catSceneId;
-            if (catSceneId != -1)
-            {
-                //Load catscene
-                StartCatScene(catSceneId, id + 1);
-            }
-            else
-            {
-                CreateLevel(id + 1);
-            }
+            StartCatScene(id + 1);
         }
         else
         {
@@ -44,8 +35,9 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void StartCatScene(int catSceneId, int nextLevelId)
+    private void StartCatScene(int nextLevelId)
     {
-        catScenes[catSceneId].StartScene(nextLevelId);
+        catScenes[nextLevelId].StartScene(this, nextLevelId);
+        //after this catScene should invoke CreateLevel(id + 1);
     }
 }

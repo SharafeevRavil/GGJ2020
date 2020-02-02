@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class CatScene : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private int _nextLevelId;
+    private GameController _gameController;
+
+    public virtual void StartScene(GameController gameController, int nextLevelId)
     {
-        
+        _gameController = gameController;
+        _nextLevelId = nextLevelId;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void StartNextLevel()
     {
-        
-    }
-
-    public void StartScene(int nextLevelId)
-    {
-        throw new System.NotImplementedException();
+        _gameController.CreateLevel(_nextLevelId);
     }
 }

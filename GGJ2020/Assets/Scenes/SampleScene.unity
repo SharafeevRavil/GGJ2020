@@ -151,14 +151,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - levelSize: {x: 13, y: 7, z: 10}
+  - levelSize: {x: 8, y: 5, z: 5}
     levelConfigurationFile: Level1
-    playerSpawn: {x: 7, y: 7, z: 7}
-  - levelSize: {x: 13, y: 7, z: 10}
+    playerSpawn: {x: 1, y: 2, z: 1}
+  - levelSize: {x: 8, y: 5, z: 5}
     levelConfigurationFile: Level1
-    playerSpawn: {x: 7, y: 7, z: 7}
+    playerSpawn: {x: 1, y: 2, z: 1}
   levelPrefab: {fileID: 2678871271384295974, guid: f3d1e58a2de5ab541ad38e5a06f9c44b,
     type: 3}
+  catScenes:
+  - {fileID: 0}
+  - {fileID: 1786050917}
 --- !u!4 &100830171
 Transform:
   m_ObjectHideFlags: 0
@@ -430,6 +433,82 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: -30, z: 0}
+--- !u!1 &784497320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 784497321}
+  m_Layer: 0
+  m_Name: CatScenes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &784497321
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784497320}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 24.088146, y: 20.38608, z: 25.094864}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1786050916}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1786050915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1786050916}
+  - component: {fileID: 1786050917}
+  m_Layer: 0
+  m_Name: NextLevel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1786050916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786050915}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 784497321}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1786050917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786050915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36149d58b4774bdb83efc6f03014ae68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seconds: 3
+  levelCompletedObject: {fileID: 1855061711}
 --- !u!1 &1855061711
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +521,7 @@ GameObject:
   - component: {fileID: 1855061714}
   - component: {fileID: 1855061713}
   m_Layer: 5
-  m_Name: You win
+  m_Name: Next level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -487,20 +566,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 42
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 2
     m_MaxSize: 58
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'You win
-
-'
+  m_Text: Level completed
 --- !u!222 &1855061714
 CanvasRenderer:
   m_ObjectHideFlags: 0
