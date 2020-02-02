@@ -682,7 +682,7 @@ MonoBehaviour:
     playerSpawn: {x: 5, y: 2, z: 5}
   - levelSize: {x: 10, y: 4, z: 8}
     levelConfigurationFile: Level6
-    playerSpawn: {x: 5, y: 2, z: 8}
+    playerSpawn: {x: 8, y: 2, z: 5}
   - levelSize: {x: 13, y: 7, z: 10}
     levelConfigurationFile: Level7
     playerSpawn: {x: 4, y: 2, z: 4}
@@ -14475,7 +14475,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 301, y: -226.5}
-  m_SizeDelta: {x: 602, y: 453}
+  m_SizeDelta: {x: 2000, y: 2000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1849218935
 MonoBehaviour:
