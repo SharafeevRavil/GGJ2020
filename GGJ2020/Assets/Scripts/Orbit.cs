@@ -18,7 +18,7 @@ public class Orbit : MonoBehaviour
     void Start()
     {
         var position = player.position;
-        offset = position + deltaOffset;
+        offset = /*position +*/ deltaOffset;
         curPosition = offset;
         offsetMaxLength = offset.magnitude;
     }

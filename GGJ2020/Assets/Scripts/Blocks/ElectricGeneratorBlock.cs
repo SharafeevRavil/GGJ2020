@@ -5,5 +5,9 @@ using UnityEngine;
 
 public class ElectricGeneratorBlock : Block, IElectricBlock
 {
-    public bool IsActivated => true;
+    public bool CheckRecursionActivated => true;
+    
+    public void EnsureDisabled(bool visited)
+    {
+    }
 }

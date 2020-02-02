@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ElectricBrokenWireBlock : Block, IElectricBlock
 {
-    public bool IsActivated
+    public bool CheckRecursionActivated
     {
         get
         {
@@ -20,11 +21,26 @@ public class ElectricBrokenWireBlock : Block, IElectricBlock
                 new Vector3Int(-1, 0, 0),
                 new Vector3Int(1, 0, 0)
             };
-            return neighbours.Select(x => x + position).Any(pos =>
+            _enabled = neighbours.Select(x => x + position).Any(pos =>
                 pos.x >= 0 && pos.x < levelSize.x &&
                 pos.y >= 0 && pos.y < levelSize.y &&
                 pos.z >= 0 && pos.z < levelSize.z &&
                 blocks[pos.x, pos.y, pos.z] is ElectricMovableBlock);
+            return _enabled;
+        }
+    }
+    
+
+    private bool _enabled = false;
+    public void EnsureDisabled(bool visited)
+    {
+        if (!visited || !_enabled)
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(false);
+        }
+        else
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(true);
         }
     }
 }

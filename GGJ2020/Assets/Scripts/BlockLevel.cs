@@ -8,16 +8,26 @@ using UnityEngine;
 
 public class BlockLevel : MonoBehaviour
 {
-    [SerializeField] public LevelConfiguration LevelConfiguration;
+    [SerializeField] public LevelConfiguration levelConfiguration;
 
     public Vector3Int LevelSize { get; private set; }
+    public Vector3 playerSpawn;
 
     public void Start()
     {
-        LevelSize = LevelConfiguration.levelSize;
+        InitLevel();
+    }
+
+    public void InitLevel()
+    {
+        GameObject player = FindObjectOfType<PlayerMotor>().gameObject;
+        player.transform.position = playerSpawn;
+
+
+        LevelSize = levelConfiguration.levelSize;
         _blocks = new Block[LevelSize.x, LevelSize.y, LevelSize.z];
 
-        string textFileName = LevelConfiguration.levelConfigurationFile;
+        string textFileName = levelConfiguration.levelConfigurationFile;
         string configText = ((TextAsset) Resources.Load($"Levels/{textFileName}")).text;
         string[][] lines = configText
             .Split('\n')
@@ -55,6 +65,9 @@ public class BlockLevel : MonoBehaviour
                 }
             }
         }
+
+        //включаем включенные
+        CheckElectric();
     }
 
     public void MoveBlock(Vector3Int from, Vector3Int to)
@@ -66,7 +79,7 @@ public class BlockLevel : MonoBehaviour
 
         if (block.position.y > 0 && !_blocks[block.position.x, block.position.y - 1, block.position.z])
         {
-            ((MovableBlock)block).Push(Vector3Int.down);
+            ((MovableBlock) block).Push(Vector3Int.down);
         }
         else
         {
@@ -80,6 +93,14 @@ public class BlockLevel : MonoBehaviour
                position.y >= 0 && position.y < LevelSize.y &&
                position.z >= 0 && position.z < LevelSize.z &&
                !_blocks[position.x, position.y, position.z];
+    }
+
+    public bool CheckIsMovable(Vector3Int position)
+    {
+        return position.x >= 0 && position.x < LevelSize.x &&
+               position.y >= 0 && position.y < LevelSize.y &&
+               position.z >= 0 && position.z < LevelSize.z &&
+               _blocks[position.x, position.y, position.z] is MovableBlock;
     }
 
     public Block[,,] _blocks;
@@ -96,18 +117,33 @@ public class BlockLevel : MonoBehaviour
                 generatorBlock = (ElectricGeneratorBlock) block;
             }
         }
+
         Recursion(visited, generatorBlock.position);
+        for (int x = 0; x < LevelSize.x; x++)
+        {
+            for (int y = 0; y < LevelSize.y; y++)
+            {
+                for (int z = 0; z < LevelSize.z; z++)
+                {
+                    Block block = _blocks[x, y, z];
+                    if (block is IElectricBlock)
+                    {
+                        IElectricBlock electricBlock = (IElectricBlock) block;
+                        electricBlock.EnsureDisabled(visited[x, y, z]);
+                    }
+                }
+            }
+        }
     }
 
     public void ReceiverHasEnabled()
     {
         Debug.Log("YOU WIN");
         testWin.SetActive(true);
-        
     }
 
     public GameObject testWin;
-    
+
     public void Recursion(bool[,,] visited, Vector3Int position)
     {
         if (position.x < 0 || position.x >= LevelSize.x ||
@@ -115,7 +151,7 @@ public class BlockLevel : MonoBehaviour
             position.z < 0 || position.z >= LevelSize.z ||
             visited[position.x, position.y, position.z] ||
             !(_blocks[position.x, position.y, position.z] is IElectricBlock) ||
-            !((IElectricBlock) _blocks[position.x, position.y, position.z]).IsActivated)
+            !((IElectricBlock) _blocks[position.x, position.y, position.z]).CheckRecursionActivated)
         {
             return;
         }

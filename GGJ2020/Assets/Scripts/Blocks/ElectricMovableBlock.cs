@@ -2,5 +2,18 @@
 
 public class ElectricMovableBlock : MovableBlock, IElectricBlock
 {
-    public bool IsActivated => true;
+    public bool CheckRecursionActivated => true;
+    
+    
+    public void EnsureDisabled(bool visited)
+    {
+        if (!visited)
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(false);
+        }
+        else
+        {
+            GetComponent<BlockMaterialChanger>().ChangeMaterial(true);
+        }
+    }
 }

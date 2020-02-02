@@ -72,8 +72,10 @@ public class PlayerBlocks : MonoBehaviour
 
     public bool CanMoveNearest()
     {
-        return nearestMovableBlock && currentLevel.CheckIsEmpty(nearestMovableBlock.position +
-                                                                nearestMovableBlock.position.GetDirection(playerCenter
-                                                                    .position));
+        return nearestMovableBlock &&
+            currentLevel.CheckIsEmpty(
+                nearestMovableBlock.position +
+                nearestMovableBlock.position.GetDirection(playerCenter.position)) &&
+            !currentLevel.CheckIsMovable(nearestMovableBlock.position + Vector3Int.up);
     }
 }

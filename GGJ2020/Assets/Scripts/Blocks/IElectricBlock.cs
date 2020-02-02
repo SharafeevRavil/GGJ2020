@@ -1,4 +1,7 @@
 ﻿public interface IElectricBlock
 {
-    bool IsActivated { get; }
+    bool CheckRecursionActivated { get; }
+
+    void EnsureDisabled(bool visited);
+
 }
